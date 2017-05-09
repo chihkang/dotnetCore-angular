@@ -29,7 +29,7 @@ namespace vega.Controllers
                 return BadRequest(ModelState);
 
             // var model = await context.Models.FindAsync(vehicleResource.ModelId);
-            var model = await repository.GetVehicleWithModel(vehicleResource.ModelId);
+            var model = await repository.GetVehicleModel(vehicleResource.ModelId);
             if (model == null)
             {
                 ModelState.AddModelError("ModelId", "Invalid modelId.");
