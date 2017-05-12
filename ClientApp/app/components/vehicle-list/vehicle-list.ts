@@ -5,8 +5,7 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: 'vehicle-list.html'
 })
 export class VehicleListComponent implements OnInit {
-    vehicles: Vehicle[];
-    allVehicles: Vehicle[];
+    vehicles: Vehicle[];    
     makes: KeyValuePair[];
     filter: any = {};
 
@@ -16,20 +15,26 @@ export class VehicleListComponent implements OnInit {
         this.VehicleService.getMakes()
             .subscribe(makes => this.makes = makes);
 
-        this.VehicleService.getVehicles()
-            .subscribe(vehicles => this.vehicles = this.allVehicles = vehicles);
+        this.populateVehicles();
     }
-
+    private populateVehicles(){
+        this.VehicleService.getVehicles(this.filter)
+            .subscribe(vehicles => this.vehicles = vehicles);
+    }
     onFilterChange(){
-        var vehicles = this.allVehicles;
+        // Server Side filter        
+        this.populateVehicles();
+
+        // Client Side filter
+        // var vehicles = this.allVehicles;
         
-        if(this.filter.makeId)
-            vehicles = vehicles.filter(v => v.make.id == this.filter.makeId);
+        // if(this.filter.makeId)
+        //     vehicles = vehicles.filter(v => v.make.id == this.filter.makeId);
         
-        if(this.filter.modelId)
-            vehicles = vehicles.filter(v => v.model.id == this.filter.modelId);
+        // if(this.filter.modelId)
+        //     vehicles = vehicles.filter(v => v.model.id == this.filter.modelId);
             
-        this.vehicles = vehicles;
+        // this.vehicles = vehicles;
     }
 
     resetFilter(){
