@@ -8,15 +8,26 @@ namespace vega.Extensions
 {
     public static class IQueryableExtensions
     {
-        public static IQueryable<T> ApplyOrdering<T>(this IQueryable<T> query,IQueryObject queryObj,Dictionary<string, Expression<Func<T, object>>> columnsMap)
+        public static IQueryable<T> ApplyOrdering<T>(this IQueryable<T> query, IQueryObject queryObj, Dictionary<string, Expression<Func<T, object>>> columnsMap)
         {
-            if(string.IsNullOrWhiteSpace(queryObj.SortBy) ||  !columnsMap.ContainsKey(queryObj.SortBy))
+            if (string.IsNullOrWhiteSpace(queryObj.SortBy) || !columnsMap.ContainsKey(queryObj.SortBy))
                 return query;
 
-            if(queryObj.IsSortAscending)
+            if (queryObj.IsSortAscending)
                 return query.OrderBy(columnsMap[queryObj.SortBy]);
             else
                 return query.OrderByDescending(columnsMap[queryObj.SortBy]);
+        }
+
+        public static IQueryable<T> ApplyingPaging<T>(this IQueryable<T> query, IQueryObject queryObj)
+        {
+            if (queryObj.Page <= 0)
+                queryObj.Page = 1;
+
+            if (queryObj.PageSize <= 0)
+                queryObj.PageSize = 10;
+
+            return query.Skip((queryObj.Page - 1) * queryObj.PageSize).Take(queryObj.PageSize);
         }
     }
 }
