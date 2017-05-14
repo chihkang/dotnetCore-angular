@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: 'vehicle-list.html'
 })
 export class VehicleListComponent implements OnInit {
-    vehicles: Vehicle[];    
+    queryResult: any = {};    
     makes: KeyValuePair[];
     query: any = {
         pageSize : 3
@@ -28,7 +28,7 @@ export class VehicleListComponent implements OnInit {
     }
     private populateVehicles(){
         this.VehicleService.getVehicles(this.query)
-            .subscribe(vehicles => this.vehicles = vehicles);
+            .subscribe(result => this.queryResult = result);
     }
     onFilterChange(){
         // Server Side filter        
