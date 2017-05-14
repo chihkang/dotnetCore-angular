@@ -5,62 +5,67 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: 'vehicle-list.html'
 })
 export class VehicleListComponent implements OnInit {
-    queryResult: any = {};    
+    private readonly PAGE_SIZE = 3;
+    queryResult: any = {};
     makes: KeyValuePair[];
     query: any = {
-        pageSize : 3
+        pageSize: this.PAGE_SIZE
     };
     columns = [
-        {title: 'Id'},
-        {title: 'Make', key: 'make', isSortable: true },
-        {title: 'Model', key: 'model', isSortable: true },
-        {title: 'Contact Name', key: 'contactName', isSortable: true },
-        { }
+        { title: 'Id' },
+        { title: 'Make', key: 'make', isSortable: true },
+        { title: 'Model', key: 'model', isSortable: true },
+        { title: 'Contact Name', key: 'contactName', isSortable: true },
+        {}
     ];
 
     constructor(private VehicleService: VehicleService) { }
-    
+
     ngOnInit() {
         this.VehicleService.getMakes()
             .subscribe(makes => this.makes = makes);
 
         this.populateVehicles();
     }
-    private populateVehicles(){
+    private populateVehicles() {
         this.VehicleService.getVehicles(this.query)
             .subscribe(result => this.queryResult = result);
     }
-    onFilterChange(){
-        // Server Side filter        
+    onFilterChange() {
+        // Server Side filter
+        this.query.page = 1;
         this.populateVehicles();
 
         // Client Side filter
         // var vehicles = this.allVehicles;
-        
+
         // if(this.filter.makeId)
         //     vehicles = vehicles.filter(v => v.make.id == this.filter.makeId);
-        
+
         // if(this.filter.modelId)
         //     vehicles = vehicles.filter(v => v.model.id == this.filter.modelId);
-            
+
         // this.vehicles = vehicles;
     }
 
-    resetFilter(){
-        this.query ={};
-        this.onFilterChange();
+    resetFilter() {
+        this.query = {
+            page: 1,
+            pageSize: this.PAGE_SIZE
+        };
+        this.populateVehicles();
     }
 
-    sortBy(columnName){
-        if(this.query.sortBy === columnName){
+    sortBy(columnName) {
+        if (this.query.sortBy === columnName) {
             this.query.isSortAscending = !this.query.isSortAscending;
-        }else{
+        } else {
             this.query.sortBy = columnName;
             this.query.isSortAscending = true;
         }
         this.populateVehicles();
     }
-    onPageChange(page){
+    onPageChange(page) {
         this.query.page = page;
         this.populateVehicles();
     }
