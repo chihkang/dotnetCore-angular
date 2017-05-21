@@ -1,3 +1,4 @@
+import { PhotoService } from './services/photo.service';
 import { ViewVehicleComponent } from './components/view-vehicle/view-vehicle';
 import { PaginationComponent } from './components/shared/pagination.component';
 import { VehicleListComponent } from './components/vehicle-list/vehicle-list';
@@ -54,7 +55,8 @@ Raven
     ],
     providers:[
         { provide: ErrorHandler, useClass: AppErrorHandler },
-        VehicleService
+        VehicleService,
+        PhotoService
     ]
 })
 export class AppModule {
