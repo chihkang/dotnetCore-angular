@@ -12,41 +12,41 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ViewVehicleComponent implements OnInit {
   @ViewChild('fileInput') fileInput: ElementRef;
   vehicle: any;
-  vehicleId: number; 
+  vehicleId: number;
   photos: any[];
   progress: any;
 
   constructor(
     private zone: NgZone,
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private router: Router,
     private toasty: ToastyService,
     private progressService: ProgressService,
     private PhotoService: PhotoService,
-    private vehicleService: VehicleService) { 
-    
+    private vehicleService: VehicleService) {
+
     route.params.subscribe(p => {
       this.vehicleId = +p['id'];
       if (isNaN(this.vehicleId) || this.vehicleId <= 0) {
         router.navigate(['/vehicles']);
-        return; 
+        return;
       }
     });
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.PhotoService.getPhotos(this.vehicleId)
       .subscribe(photos => this.photos = photos);
 
     this.vehicleService.getVehicle(this.vehicleId)
       .subscribe(
-        v => this.vehicle = v,
-        err => {
-          if (err.status == 404) {
-            this.router.navigate(['/vehicles']);
-            return; 
-          }
-        });
+      v => this.vehicle = v,
+      err => {
+        if (err.status == 404) {
+          this.router.navigate(['/vehicles']);
+          return;
+        }
+      });
   }
 
   delete() {
@@ -58,22 +58,35 @@ export class ViewVehicleComponent implements OnInit {
     }
   }
 
-  uploadPhoto(){
-    var nativeElement: HTMLInputElement = this.fileInput.nativeElement;
+  uploadPhoto() {
 
     this.progressService.startTracking()
       .subscribe(progress => {
         console.log(progress);
-        this.zone.run(()=>{
+        this.zone.run(() => {
           this.progress = progress;
-        });        
+        });
       },
       null,
       () => { this.progress = null; });
 
-    this.PhotoService.upload(this.vehicleId, nativeElement.files[0])
-      .subscribe(photo =>{
+    var nativeElement: HTMLInputElement = this.fileInput.nativeElement;
+
+    var file = nativeElement.files[0];
+    nativeElement.value = '';
+    
+    this.PhotoService.upload(this.vehicleId, file)
+      .subscribe(photo => {
         this.photos.push(photo);
+      },
+      err => {
+        this.toasty.error({
+          title: 'Error',
+          msg: err.text(),
+          theme: 'bootstrap',
+          showClose: true,
+          timeout: 5000
+        });
       });
   }
 }
