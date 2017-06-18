@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth.service';
 import { BrowserXhr } from '@angular/http';
 import { NgZone } from '@angular/core';
 import { ProgressService, BrowserXhrWithProgress } from './../../services/progress.service';
@@ -22,6 +23,7 @@ export class ViewVehicleComponent implements OnInit {
   progress: any;
 
   constructor(
+    private auth: AuthService,
     private zone: NgZone,
     private route: ActivatedRoute,
     private router: Router,
