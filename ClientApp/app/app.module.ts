@@ -1,3 +1,5 @@
+import { AdminAuthGuard } from './services/admin-auth-guard.service';
+import { AuthGuard } from './services/auth-guard.service';
 import { AdminComponent } from './components/admin/admin.component';
 import { AuthService } from './services/auth.service';
 import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
@@ -54,7 +56,7 @@ Raven
             { path: 'vehicles',component: VehicleListComponent},
             { path: 'home', component: HomeComponent },
             { path: 'counter', component: CounterComponent },
-            { path: 'admin', component: AdminComponent },
+            { path: 'admin', component: AdminComponent, canActivate: [ AdminAuthGuard ] },
             { path: 'fetch-data', component: FetchDataComponent },
             { path: '**', redirectTo: 'home' }
         ])
@@ -65,7 +67,9 @@ Raven
         VehicleService,
         PhotoService,
         ProgressService,
-        AuthService
+        AuthService,
+        AuthGuard,
+        AdminAuthGuard
     ]
 })
 export class AppModule {
