@@ -25,6 +25,7 @@ import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
 import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.component';
+import { AUTH_PROVIDERS } from "angular2-jwt/angular2-jwt";
 
 Raven
     .config('https://5831931939d44e3d94ca87082f034a01@sentry.io/166809')
@@ -63,12 +64,11 @@ Raven
     ],
     providers:[
         { provide: ErrorHandler, useClass: AppErrorHandler },
-        { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
         VehicleService,
         PhotoService,
-        ProgressService,
         AuthService,
         AuthGuard,
+        AUTH_PROVIDERS,
         AdminAuthGuard
     ]
 })
