@@ -1,3 +1,4 @@
+import { AdminComponent } from './components/admin/admin.component';
 import { AuthService } from './services/auth.service';
 import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
 import { BrowserXhr } from '@angular/http';
@@ -38,7 +39,8 @@ Raven
         VehicleFormComponent,
         VehicleListComponent,
         PaginationComponent,
-        ViewVehicleComponent
+        ViewVehicleComponent,
+        AdminComponent
     ],
     imports: [
         ToastyModule.forRoot(),
@@ -52,6 +54,7 @@ Raven
             { path: 'vehicles',component: VehicleListComponent},
             { path: 'home', component: HomeComponent },
             { path: 'counter', component: CounterComponent },
+            { path: 'admin', component: AdminComponent },
             { path: 'fetch-data', component: FetchDataComponent },
             { path: '**', redirectTo: 'home' }
         ])

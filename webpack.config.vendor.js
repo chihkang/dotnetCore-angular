@@ -28,6 +28,7 @@ module.exports = (env) => {
                 'angular2-universal-polyfills',
                 'bootstrap',
                 'auth0-js',
+                'angular2-jwt',
                 'bootstrap/dist/css/bootstrap.css',
                 'es6-shim',
                 'es6-promise',
