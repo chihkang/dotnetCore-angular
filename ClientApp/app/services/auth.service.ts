@@ -22,14 +22,7 @@ export class AuthService {
     });
 
     constructor(public router: Router) {
-        this.profile = JSON.parse(localStorage.getItem('profile'));
-  
-        var token = localStorage.getItem('token');
-        if (token) {
-            var jwtHelper = new JwtHelper();
-            var decodedToken = jwtHelper.decodeToken(token);
-            this.roles = decodedToken['https://vega.com/roles'];
-        }
+        this.readUserFromLocalStorage();
      }
 
     public login(): void {
@@ -42,12 +35,7 @@ export class AuthService {
             
             if (authResult && authResult.accessToken ) {
                 window.location.hash = '';
-                this.setSession(authResult);
-
-                var jwtHelper = new JwtHelper();
-                var decodedToken = jwtHelper.decodeToken(authResult.accessToken);
-                this.roles = decodedToken['https://vega.com/roles'];
-
+                this.setSession(authResult);                
                 this.router.navigate(['/home']);
             } else if (err) {
                 this.router.navigate(['/home']);
@@ -55,28 +43,36 @@ export class AuthService {
             }
         });
     }
-
+    private readUserFromLocalStorage(){
+        this.profile = JSON.parse(localStorage.getItem('profile'));
+  
+        var token = localStorage.getItem('token');
+        if (token) {
+            var jwtHelper = new JwtHelper();
+            var decodedToken = jwtHelper.decodeToken(token);
+            this.roles = decodedToken['https://vega.com/roles'];
+        }
+    }
     private setSession(authResult): void {
         // Set the time that the access token will expire at
         
         const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-        localStorage.setItem('access_token', authResult.accessToken);
+        localStorage.setItem('token', authResult.accessToken);
         localStorage.setItem('expires_at', expiresAt);
         this.auth0.client.userInfo(authResult.accessToken, (error, profile) => {
             if (error)
                 throw error;
-    
-            console.log(profile);
+
             localStorage.setItem('profile', JSON.stringify(profile));
-            this.profile = profile;
+            this.readUserFromLocalStorage();
         });
     }
 
     public logout(): void {
         // Remove tokens and expiry time from localStorage
-        localStorage.removeItem('access_token');
         localStorage.removeItem('token');
         localStorage.removeItem('expires_at');
+        localStorage.removeItem('profile');
         this.profile = null;
         this.roles = [];
         // Go back to the home route
